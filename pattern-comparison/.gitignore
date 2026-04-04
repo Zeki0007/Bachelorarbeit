@@ -1,7 +1,22 @@
+### Python & Simulations-Outputs ###
+.venv/
+results_output/
+results-*.json
+
+### Java / Maven ###
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+dependency-reduced-pom.xml
+**/dependency-reduced-pom.xml
+
+### Haskell / Cabal / Stack ###
+dist-newstyle/
+.stack-work/
+*.hi
+*.o
+.ghc.environment.*
 
 ### IntelliJ IDEA ###
 .idea/
@@ -38,10 +53,3 @@ build/
 
 ### Mac OS ###
 .DS_Store
-
-### Haskell / Cabal / Stack ###
-dist-newstyle/
-.stack-work/
-*.hi
-*.o
-.ghc.environment.*
