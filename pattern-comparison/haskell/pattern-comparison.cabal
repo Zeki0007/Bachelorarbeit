@@ -1,0 +1,69 @@
+cabal-version:      3.0
+name:               pattern-comparison
+version:            0.1.0.0
+build-type:         Simple
+
+common shared-properties
+    ghc-options: -Wall -O2
+
+library
+    import:           shared-properties
+    exposed-modules:  AST, Strategy, State
+    build-depends:    base >=4.14 && <5,
+                      containers
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+executable pattern-comparison
+    import:           shared-properties
+    main-is:          Main.hs
+    build-depends:
+        base >=4.14 && <5,
+        containers,
+        pattern-comparison
+    hs-source-dirs:   app
+    default-language: Haskell2010
+
+benchmark ast-bench
+    import:           shared-properties
+    type:             exitcode-stdio-1.0
+    main-is:          AstBench.hs
+    hs-source-dirs:   bench
+    build-depends:    base >=4.14 && <5,
+                      pattern-comparison,
+                      criterion,
+                      containers
+    default-language: Haskell2010
+
+benchmark strategy-bench
+    import:           shared-properties
+    type:             exitcode-stdio-1.0
+    main-is:          StrategyBench.hs
+    hs-source-dirs:   bench
+    build-depends:    base >=4.14 && <5,
+                      pattern-comparison,
+                      criterion,
+                      containers
+    default-language: Haskell2010
+
+benchmark state-bench
+    import:           shared-properties
+    type:             exitcode-stdio-1.0
+    main-is:          StateBench.hs
+    hs-source-dirs:   bench
+    build-depends:    base >=4.14 && <5,
+                      pattern-comparison,
+                      criterion
+    default-language: Haskell2010
+
+test-suite ast-test
+    import:           shared-properties
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5,
+                      pattern-comparison,
+                      QuickCheck,
+                      hspec,
+                      containers
+    default-language: Haskell2010
