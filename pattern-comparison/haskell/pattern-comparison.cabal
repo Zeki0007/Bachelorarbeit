@@ -8,7 +8,7 @@ common shared-properties
 
 library
     import:           shared-properties
-    exposed-modules:  AST, Strategy, State
+    exposed-modules:  Visitor, Strategy, State
     build-depends:    base >=4.14 && <5,
                       containers
     hs-source-dirs:   src
@@ -24,10 +24,10 @@ executable pattern-comparison
     hs-source-dirs:   app
     default-language: Haskell2010
 
-benchmark ast-bench
+benchmark visitor-bench
     import:           shared-properties
     type:             exitcode-stdio-1.0
-    main-is:          AstBench.hs
+    main-is:          VisitorBench.hs
     hs-source-dirs:   bench
     build-depends:    base >=4.14 && <5,
                       pattern-comparison,
@@ -56,7 +56,7 @@ benchmark state-bench
                       criterion
     default-language: Haskell2010
 
-test-suite ast-test
+test-suite visitor-test
     import:           shared-properties
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs

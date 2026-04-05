@@ -1,4 +1,4 @@
-module AST where
+module Visitor where
 
 import qualified Data.Map as Map
 

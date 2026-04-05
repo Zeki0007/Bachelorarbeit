@@ -18,8 +18,8 @@ main :: IO ()
 main = do
     -- The Benchmark-Harness
     defaultMain [
-        bgroup "Strategy-Pattern (10 Million Shopping Carts)" [
+        bgroup "(10M Shopping Cards)" [
             -- We measure our clean pipeline
-            bench "Clean Pipeline (Lazy Evaluation)" $ whnf cleanPipeline carts
+            bench "Lazy Evaluation" $ whnf cleanPipeline carts
         ]
       ]

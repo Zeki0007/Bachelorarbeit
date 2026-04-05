@@ -61,26 +61,26 @@ simulations = [
         "tool": "criterion"
     },
 
-    # --- AST / VISITOR PATTERN ---
+    # --- VISITOR PATTERN ---
     {
-        "name": "AST Pattern (Classic Java)",
+        "name": "Visitor Pattern (Classic Java)",
         "dir": "java-classic",
-        "cmd": "mvn clean package && java -jar target/benchmarks.jar AstBenchmarkClassic -rf json -rff results-AstBenchmarkClassic.json",
-        "result_file": "java-classic/results-AstBenchmarkClassic.json",
+        "cmd": "mvn clean package && java -jar target/benchmarks.jar VisitorBenchmarkClassic -rf json -rff results-VisitorBenchmarkClassic.json",
+        "result_file": "java-classic/results-VisitorBenchmarkClassic.json",
         "tool": "jmh"
     },
     {
-        "name": "AST Pattern (Modern Java)",
+        "name": "Visitor Pattern (Modern Java)",
         "dir": "java-modern",
-        "cmd": "mvn clean package && java -jar target/benchmarks.jar AstBenchmarkModern -rf json -rff results-AstBenchmarkModern.json",
-        "result_file": "java-modern/results-AstBenchmarkModern.json",
+        "cmd": "mvn clean package && java -jar target/benchmarks.jar VisitorBenchmarkModern -rf json -rff results-VisitorBenchmarkModern.json",
+        "result_file": "java-modern/results-VisitorBenchmarkModern.json",
         "tool": "jmh"
     },
     {
-        "name": "AST Pattern (Haskell)",
+        "name": "Visitor Pattern (Haskell)",
         "dir": "haskell",
-        "cmd": "cabal bench ast-bench --benchmark-options=\"--json=results-haskell-ast.json\"",
-        "result_file": "haskell/results-haskell-ast.json",
+        "cmd": "cabal bench visitor-bench --benchmark-options=\"--json=results-haskell-visitor.json\"",
+        "result_file": "haskell/results-haskell-visitor.json",
         "tool": "criterion"
     }
 ]
@@ -175,8 +175,8 @@ def generate_graphs(results):
 
     state_data = {'Haskell': 0, 'Java Classic': 0, 'Java Modern': 0}
     strat_data = {'Java Classic (Imperative)': 0, 'Haskell (Clean Pipeline)': 0, 'Java Modern (Streams)': 0, 'Java Classic (Pipeline)': 0}
-    ast_simple = {'Java Classic': [0]*4, 'Java Modern': [0]*4, 'Haskell': [0]*4}
-    ast_complex = {'Java Classic': [0]*4, 'Java Modern': [0]*4, 'Haskell': [0]*4}
+    visitor_simple = {'Java Classic': [0] * 4, 'Java Modern': [0] * 4, 'Haskell': [0] * 4}
+    visitor_complex = {'Java Classic': [0] * 4, 'Java Modern': [0] * 4, 'Haskell': [0] * 4}
 
     for arch, test, score_str in results:
         if "ERROR" in score_str: continue
@@ -201,7 +201,7 @@ def generate_graphs(results):
                 if "Imperative" in test or "Loop" in test: strat_data['Java Classic (Imperative)'] = val_ns
                 elif "Strict" in test or "Pipeline" in test: strat_data['Java Classic (Pipeline)'] = val_ns
 
-        elif "AST Pattern" in arch:
+        elif "Visitor Pattern" in arch:
             idx = -1
             if "13" in test: idx = 0
             elif "16" in test: idx = 1
@@ -210,8 +210,8 @@ def generate_graphs(results):
 
             if idx != -1:
                 cat = 'Haskell' if 'Haskell' in arch else ('Java Classic' if 'Classic Java' in arch else 'Java Modern')
-                if "Simple" in test: ast_simple[cat][idx] = val_ms
-                elif "Complex" in test and "Lazy Trap" not in test: ast_complex[cat][idx] = val_ms
+                if "Simple" in test: visitor_simple[cat][idx] = val_ms
+                elif "Complex" in test and "Lazy Trap" not in test: visitor_complex[cat][idx] = val_ms
 
     # --- Plotting ---
     plt.style.use('ggplot')
@@ -248,11 +248,11 @@ def generate_graphs(results):
     plt.savefig(os.path.join(GRAPHS_DIR, 'strategy_pattern.png'), dpi=300)
     plt.close()
 
-    # 3. & 4. AST Patterns (Line Charts)
+    # 3. & 4. Visitor Patterns (Line Charts)
     depths = ['D-13\n(~16k)', 'D-16\n(~131k)', 'D-19\n(~1M)', 'D-23\n(~16.7M)']
     x = np.arange(len(depths))
 
-    def plot_ast(data, title, filename):
+    def plot_visitor(data, title, filename):
         fig, ax = plt.subplots(figsize=(9, 5))
         ax.plot(x, data['Java Classic'], marker='o', label='Java Classic', color='#ff7f0e', linewidth=2)
         ax.plot(x, data['Java Modern'], marker='s', label='Java Modern', color='#2ca02c', linewidth=2)
@@ -267,8 +267,8 @@ def generate_graphs(results):
         plt.savefig(os.path.join(GRAPHS_DIR, filename), dpi=300)
         plt.close()
 
-    plot_ast(ast_simple, 'AST Pattern - Simple Tree Scaling', 'ast_simple_tree.png')
-    plot_ast(ast_complex, 'AST Pattern - Complex Tree Scaling', 'ast_complex_tree.png')
+    plot_visitor(visitor_simple, 'Visitor Pattern - Simple Tree Scaling', 'visitor_simple_tree.png')
+    plot_visitor(visitor_complex, 'Visitor Pattern - Complex Tree Scaling', 'visitor_complex_tree.png')
 
     print(f"-> 4 graphs successfully saved as PNG in '{GRAPHS_DIR}'!\n")
 

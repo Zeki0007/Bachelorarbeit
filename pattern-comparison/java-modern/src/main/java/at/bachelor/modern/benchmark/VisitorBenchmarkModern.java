@@ -1,6 +1,6 @@
-package at.bachelor.classic.benchmark;
+package at.bachelor.modern.benchmark;
 
-import at.bachelor.classic.visitor.*;
+import at.bachelor.modern.visitor.*;
 import org.openjdk.jmh.annotations.*;
 
 import java.util.HashMap;
@@ -13,14 +13,13 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 3, time = 1)
 @Measurement(iterations = 5, time = 1)
 @Fork(value = 1, jvmArgs = {"-Xmx6G"})
-public class AstBenchmarkClassic {
+public class VisitorBenchmarkModern {
 
     @Param({"13", "16", "19", "23"})
     public int depth;
 
     private Expression simpleTree;
     private Expression complexTree;
-    private EvaluationVisitor evaluator;
     private Map<String, Integer> environment;
 
     @Setup(Level.Trial)
@@ -32,21 +31,17 @@ public class AstBenchmarkClassic {
         for (int i = 0; i < 10; i++) {
             environment.put("x" + i, i);
         }
-
-        evaluator = new EvaluationVisitor(environment);
     }
 
-    // Generator 1: Only addition and literals
     private Expression createSimpleTree(int currentDepth) {
         if (currentDepth == 0) return new Literal(2);
         return new Addition(createSimpleTree(currentDepth - 1), createSimpleTree(currentDepth - 1));
     }
 
-    // Generator 2: Addition, negation, variables and literals
     private Expression createComplexTree(int currentDepth, int id) {
         if (currentDepth == 0) {
             if (id % 3 == 0) {
-                return new Variable("x" + (id % 10)); // Variables x0 to x9
+                return new Variable("x" + (id % 10));
             } else {
                 return new Literal(id % 100);
             }
@@ -62,20 +57,20 @@ public class AstBenchmarkClassic {
     }
 
     @Benchmark
-    public int testClassicSimpleTree() {
-        return simpleTree.accept(evaluator);
+    public int testModernSimpleTree() {
+        return Evaluation.evaluate(simpleTree, environment);
     }
 
     @Benchmark
-    public int testClassicComplexTree() {
-        return complexTree.accept(evaluator);
+    public int testModernComplexTree() {
+        return Evaluation.evaluate(complexTree, environment);
     }
 
     public static void main(String[] args) throws Exception {
         org.openjdk.jmh.runner.options.Options opt = new org.openjdk.jmh.runner.options.OptionsBuilder()
-            .include(AstBenchmarkClassic.class.getSimpleName())
+            .include(VisitorBenchmarkModern.class.getSimpleName())
             .resultFormat(org.openjdk.jmh.results.format.ResultFormatType.JSON)
-            .result("results-" + AstBenchmarkClassic.class.getSimpleName() + ".json")
+            .result("results-" + VisitorBenchmarkModern.class.getSimpleName() + ".json")
             .build();
         new org.openjdk.jmh.runner.Runner(opt).run();
     }

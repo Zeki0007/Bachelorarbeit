@@ -1,6 +1,6 @@
 module Main where
 {-
-import AST
+import Visitor
 import qualified Data.Map as Map
 
 main :: IO ()

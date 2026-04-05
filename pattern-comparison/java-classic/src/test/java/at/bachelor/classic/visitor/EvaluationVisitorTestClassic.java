@@ -8,7 +8,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class EvaluationVisitorTest {
+public class EvaluationVisitorTestClassic {
 
     private EvaluationVisitor evaluator;
     private Map<String, Integer> environment;

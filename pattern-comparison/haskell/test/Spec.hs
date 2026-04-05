@@ -2,7 +2,7 @@ module Main where
 
 import Test.Hspec
 import Test.QuickCheck
-import AST
+import Visitor
 import qualified Data.Map as Map
 
 instance Arbitrary Expression where
