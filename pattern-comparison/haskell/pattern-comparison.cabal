@@ -8,7 +8,7 @@ common shared-properties
 
 library
     import:           shared-properties
-    exposed-modules:  Visitor, Strategy, State
+    exposed-modules:  Visitor, Strategy, State, Generics
     build-depends:    base >=4.14 && <5,
                       containers
     hs-source-dirs:   src
